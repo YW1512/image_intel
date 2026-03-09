@@ -1,7 +1,10 @@
+from math import degrees
+from tkinter import image_names
+
 from PIL import Image
 from PIL.ExifTags import TAGS
 from pathlib import Path
-import os
+
 
 """
 extractor.py - שליפת EXIF מתמונות
@@ -11,28 +14,51 @@ extractor.py - שליפת EXIF מתמונות
 
 """
 
+def dms_to_decimal(dms_tuple, ref):
+    degrees=float(dms_tuple[0])
+    minutes=float(dms_tuple[1])
+    seconds=float(dms_tuple[2])
 
-def has_gps(data: dict):
-    pass
+    decimal=degrees+(minutes/60)+(seconds/3600)
+    if ref in ["s","w",b"s",b"w"]:
+        decimal=-decimal
+    return decimal
+
+def has_gps(data):
+    return "GPSInfo" in data and len(data["GPSInfo"])>0
 
 
 def latitude(data: dict):
-    pass
-
+    gps_info=data.get("GPSInfo")
+    if gps_info and 2 in gps_info and 1 in gps_info:
+        return dms_to_decimal(gps_info[2],gps_info[1])
+    return None
 
 def longitude(data: dict):
-    pass
+    gps_info=data.get("GPSInfo")
+    if gps_info and 4 in gps_info and 3 in gps_info:
+        return dms_to_decimal(gps_info[4],gps_info[3])
+    return None
 
 def datatime(data: dict):
-    pass
-
+    dt_str=data.get("DateTime")
+    if dt_str:
+        data_part, time_part=dt_str.split(' ')
+        data_part=data_part.replace(':','-')
+        return f"{data_part} {time_part}"
+    return None
 
 def camera_make(data: dict):
-    pass
-
+    make=data.get("Make")
+    if make:
+        return str(make).strip("\x00")
+    return None
 
 def camera_model(data: dict):
-    pass
+    model=data.get("Model")
+    if model:
+        return str(model).strip("\x00")
+
 
 
 def extract_metadata(image_path):
@@ -95,4 +121,11 @@ def extract_all(folder_path):
     Returns:
         list של dicts (כמו extract_metadata)
     """
-    pass
+    results=[]
+    path=Path(folder_path)
+    for image_file in path.glob("*"):
+        if image_file.suffix.lower() in [".jpg",".jpeg"]:
+            metadata=extract_metadata(str(image_file))
+            results.append(metadata)
+
+    return results

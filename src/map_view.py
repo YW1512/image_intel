@@ -18,7 +18,15 @@ from folium.map import Icon
 from itertools import cycle
 
 def sort_by_time(arr):
-    return sorted(arr, key=lambda item: item.get("datetime", default='')
+    """
+    ממיין נתוני תמונות לפי תאריך ושעה.
+    Args:
+        arr: רשימת מילונים, של נתוני התמונות.
+
+    Returns:
+        איטרבל ממויין של התמונות.
+    """
+    return sorted(arr, key=lambda item: item.get("datetime", ''))
 
 
 def create_map(images_data):

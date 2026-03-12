@@ -13,6 +13,7 @@ map_view.py - יצירת מפה אינטראקטיבית
 6. הוספת מקרא מכשירים
 """
 
+import extractor
 import folium
 from folium.map import Icon
 from itertools import cycle
@@ -26,7 +27,7 @@ def sort_by_time(arr):
     Returns:
         איטרבל ממויין של התמונות.
     """
-    return sorted(arr, key=lambda item: item.get("datetime", ''))
+    return sorted(arr, key=lambda item: item["datetime"] if item["datetime"] else 'z')
 
 
 def create_map(images_data):
@@ -92,6 +93,7 @@ if __name__ == "__main__":
          "has_gps": True, "camera_make": "Apple", "camera_model": "iPhone 15 Pro",
          "datetime": "2025-01-13 09:00:00"}
     ]
+
     html = create_map(sort_by_time(fake_data))
     with open("test_map.html", "w", encoding="utf-8") as f:
         f.write(html)

@@ -106,7 +106,7 @@ def extract_metadata(image_path):
         "longitude": longitude(data),
         "camera_make": camera_make(data),
         "camera_model": camera_model(data),
-        "has_gps": has_gps(data)
+        "has_gps": has_gps(data) and (longitude(data) != None) and (latitude(data) != None)
     }
     return exif_dict
 

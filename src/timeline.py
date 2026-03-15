@@ -14,7 +14,7 @@ def create_timeline(images_data):
 
     brands = [img.get("camera_make") for img in images_data if img.get("camera_make")]
     brands_set = set(brands)
-    icons = ["fa-solid fa-mobile", "fa-regular fa-mobile", "fa-light fa-mobile", "fa-thin fa-mobile"]
+    icons = ["📱", "📲", "📷", "📸", "🎞️", "📹"]
     brands_icon = {brand: icons[i % len(icons)] for i, brand in enumerate(brands_set)}
 
     html = """
@@ -42,7 +42,7 @@ def create_timeline(images_data):
         side = "left" if i % 2 == 0 else "right"
         date_key = img["datetime"].split(" ")[0]
         make = img.get("camera_make")
-        icon_class = brands_icon.get(make, "fa-solid fa-image")
+        icon = brands_icon.get(make, "📽️")
 
         box_style = f"width:40%; padding:15px; border-radius:8px; background:#ffffff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position:relative; float:{side}; clear:both; margin-bottom:20px; box-sizing: border-box;"
 
@@ -55,7 +55,7 @@ def create_timeline(images_data):
         <div class="timeline-box" style="{box_style}">
             <strong style="color: {date_color.get(date_key, "#000")}; font-size:1.1em;">{img["datetime"]}</strong><br>
             <span style="color:#555;">{img.get("filename", "Unknown")}</span><br>
-            <small style="color:#888;"><i class="{icon_class}"></i> {img.get("camera_model", "Unknown")}</small>
+            <small style="color:#888;">{icon} {img.get("camera_model", "Unknown")}</small>
 
             <div class="extra-details">
                 <hr>
